@@ -1,5 +1,7 @@
 from copy import deepcopy
 from test import readFromFile, createState
+from visualisation import *
+
 class Node:
     depth = None
     parent = None
@@ -108,7 +110,7 @@ carSize = []
 constantPos = []
 opened = []
 closed = []
-visited=[]
+visited= []
 directions = 4
 
 def isSolution(node):
@@ -149,6 +151,7 @@ def main():
         printBoard(path[i])
     print("Path length: ",len(path))
     print("Visited nodes: ", len(visited))
+    visualisation(root,path)
 
 
 
