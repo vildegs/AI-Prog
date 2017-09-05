@@ -1,4 +1,6 @@
 from Astar import astar
+from breadthFirst import bfs
+from depthFirst import dfs
 import node
 import static
 
@@ -66,8 +68,9 @@ def main():
     board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
     static.setVariables(constantPos, orientations, lengths, numCars)
     root = node.Node(None, board, positions, [])
-    path, expanded = astar(root,4, board)
-
+    #path, expanded = astar(root,4, board)
+    path, expanded = bfs(root, 4)
+    #path, expanded = dfs(root, 4)
     for i in range(len(path)):
         printBoard(path[i].board)
     print("Path length: ",len(path))

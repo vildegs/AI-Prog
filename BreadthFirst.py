@@ -1,28 +1,26 @@
-def main():
-    global numCars, constantPos, orientations, lengths
-    example, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
-    root = Node(None, 0, example, positions, [])
-    opened.append(root)
-    print("ROOT")
-    root.printBoard()
-    while len(opened) != 0:
+
+
+def bfs(root,goal):
+    visited, opened = set(), [root]
+    path = []
+    while opened:
+        print(len(visited))
         current = opened.pop(0)
-        if isSolution(current):
-            print("Hurra")
-            current.printBoard()
-            break
-        current.expand()
-        closed.append(current)
-        #current.printBoard()
-    path = [current.board]
+        #print(current)
+        #print(len(opened))
+        #print("------------------")
+        if isSolution(current, goal):
+            path = []
+            while current.parent:
+                path.append(current)
+                current = current.parent
+            path.append(current)
+            return path[::-1], len(visited)
+        if current not in visited:
+            visited.add(current)
+            opened.extend(current.expand())
 
-    while current.parent != None:
+    return path, len(visited)
 
-        current= current.parent
-        path.append(current.board)
-
-    for i in range(len(path)-1,-1,-1):
-        printBoard(path[i])
-    print("Path length: ",len(path))
-    print("Visited nodes: ", len(visited))
-    #visualisation(root,path)
+def isSolution(node, goal):
+    return node.positions[0] == goal
