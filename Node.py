@@ -1,6 +1,5 @@
 from copy import deepcopy
-from test import readFromFile, createState
-from visualisation import *
+import static
 
 class Node:
     g = 0
@@ -10,9 +9,8 @@ class Node:
     positions = []
     prevBoard = []
 
-    def __init__(self, parent, depth, board, positions, prevBoard):
+    def __init__(self, parent, board, positions, prevBoard):
         self.parent = parent
-        self.g = g
         self.board = board
         self.positions = positions
         self.prevBoard = prevBoard
@@ -23,25 +21,22 @@ class Node:
             prevBoard = self.parent.board
         else:
             prevBoard = []
-        for i in range (numCars):
+        for i in range (static.numCars):
             #local
             position = self.positions[i]
             #global
-            fixedPos = constantPos[i]
-            orientation = orientations[i]
-            carSize = lengths[i]
+            fixedPos = static.constantPos[i]
+            orientation = static.orientations[i]
+            carSize = static.lengths[i]
 
-
-            for j in range(directions):
+            for j in range(static.directions):
                 if self.canMove(j, carSize, position, fixedPos, orientation):
                     newBoard, newPos = self.move(j,carSize,position,fixedPos,i)
-                    self.createSuccessor(newBoard, newPos)
+                    children.append(self.createSuccessor(newBoard, newPos))
         return children
 
     def createSuccessor(self, newBoard, newPos):
-        if (newBoard != self.prevBoard and newBoard not in visited):
-            return Node(self,self.depth+1, newBoard, newPos, self.board))
-            visited.append(newBoard)
+        return Node(self, newBoard, newPos, self.board)
 
     def move(self, direction, carSize, position, fixedPos, carNum):
         newBoard = deepcopy(self.board)
@@ -69,8 +64,6 @@ class Node:
 
         return newBoard, newPos
 
-
-
     def canMove(self, direction, carSize, position, fixedPos, orientation):
         #left
         if orientation ==0:
@@ -91,71 +84,10 @@ class Node:
             else:
                 return False
 
+#TODO remove
     def printBoard(self):
         for row in self.board:
             for element in row:
                 print element,
             print ("\n")
         print("\n")
-
-def printBoard(board):
-    for row in board:
-        for element in row:
-            print element,
-        print ("\n")
-    print("\n")
-
-example= []
-numCars= None
-lengths = []
-orientations = []
-carSize = []
-constantPos = []
-opened = []
-closed = []
-visited= []
-directions = 4
-
-def isSolution(node):
-    return node.positions[0]==4
-
-def main():
-    '''example = [['.' for i in range (6)] for j in range (6)]
-    example[0][2] = 1
-    example[0][1]= 1
-    example[3][3] =0
-    example[4][3] =0
-    example[2][3]= 0'''
-
-    global numCars, constantPos, orientations, lengths, visited
-    example, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
-    visited.append(example)
-    root = Node(None, 0, example, positions, [])
-    opened.append(root)
-    print("ROOT")
-    root.printBoard()
-    while len(opened) != 0:
-        current = opened.pop(0)
-        if isSolution(current):
-            print("Hurra")
-            current.printBoard()
-            break
-        current.expand()
-        closed.append(current)
-        #current.printBoard()
-    path = [current.board]
-
-    while current.parent != None:
-
-        current= current.parent
-        path.append(current.board)
-
-    for i in range(len(path)-1,-1,-1):
-        printBoard(path[i])
-    print("Path length: ",len(path))
-    print("Visited nodes: ", len(visited))
-    visualisation(root,path)
-
-
-
-main()

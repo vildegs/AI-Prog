@@ -1,4 +1,4 @@
-
+import static
 
 def astar(start, goal, board):
     opened = set()
@@ -7,17 +7,17 @@ def astar(start, goal, board):
     opened.add(current)
     while opened:
         current = min(opened, key = lambda n: n.g + n.h)
-        if isGoal(current):
+        if isSolution(current,goal):
             path = []
             while current.parent:
                 path.append(current)
                 current = current.parent
             path.append(current)
             #reverse the list, quicker than .reverse()
-            return path[::-1]
+            return path[::-1], len(closed)
         opened.remove(current)
-        closed.append(current)
-        for node in expand(current, board):
+        closed.add(current)
+        for node in current.expand():
             if node in closed:
                 #TODO update if lower values, children aswell
                 continue
@@ -31,19 +31,20 @@ def astar(start, goal, board):
                 node.h = heuristic(node, goal)
                 node.parent = current
                 opened.add(node)
-    return []
+    return [], len(closed)
 
+def isSolution(node, goal):
+    return node.positions[0]==goal
 
-
-
-def heuristic():
+def heuristic(node, goal):
     h = 0
-    h+=4-positions1[0]
-    for i in range(positions1[0]+carSize1-1):
-        if board1[fixedPos1[0]][positions1[0]+carSize1+i] != '.':
+    h+=goal-node.positions[0]
+    for i in range(node.positions[0]+static.lengths[0],len(node.board)):
+        if node.board[static.constantPos[0]][i] != '.':
             h +=1
     return h
 
+'''
 board1 = [['.' for i in range(6)] for j in range (6)]
 
 fixedPos1 = [2, 2]
@@ -58,3 +59,4 @@ def main():
 
 
 main()
+'''
