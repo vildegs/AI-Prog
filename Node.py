@@ -3,7 +3,8 @@ from test import readFromFile, createState
 from visualisation import *
 
 class Node:
-    depth = None
+    g = 0
+    h = 0
     parent = None
     board = []
     positions = []
@@ -11,12 +12,13 @@ class Node:
 
     def __init__(self, parent, depth, board, positions, prevBoard):
         self.parent = parent
-        self.depth = depth
+        self.g = g
         self.board = board
         self.positions = positions
         self.prevBoard = prevBoard
 
     def expand(self):
+        children = []
         if self.parent != None:
             prevBoard = self.parent.board
         else:
@@ -34,10 +36,11 @@ class Node:
                 if self.canMove(j, carSize, position, fixedPos, orientation):
                     newBoard, newPos = self.move(j,carSize,position,fixedPos,i)
                     self.createSuccessor(newBoard, newPos)
+        return children
 
     def createSuccessor(self, newBoard, newPos):
         if (newBoard != self.prevBoard and newBoard not in visited):
-            opened.append( Node(self,self.depth+1, newBoard, newPos, self.board))
+            return Node(self,self.depth+1, newBoard, newPos, self.board))
             visited.append(newBoard)
 
     def move(self, direction, carSize, position, fixedPos, carNum):
