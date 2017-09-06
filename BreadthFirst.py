@@ -16,8 +16,9 @@ def bfs(root,goal):
                 current = current.parent
             path.append(current)
             return path[::-1], len(visited)
-        if current not in visited:
-            visited.add(current)
+        pos = tuple(current.positions)
+        if pos not in visited:
+            visited.add(pos)
             opened.extend(current.expand())
 
     return path, len(visited)

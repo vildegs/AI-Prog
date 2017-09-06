@@ -1,22 +1,29 @@
 
 
-def dfs(root, goal):
-    visited, queue = set(), [root]
-    path = []
-    while queue:
-        current = queue.pop()
+def dfs(root, goal, visited = None, stack = None):
+    if visited == None and stack == None:
+        visited, stack = set(), [root]
+    while stack:
+        current = stack.pop()
         if isSolution(current, goal):
+            print("Solution found!")
             path = []
             while current.parent:
                 path.append
                 current = current.parent
             path.append(current)
             return path[::-1], len(visited)
-        if current not in visited:
-            visited.add(current)
-            queue.append(current.expand())
-
-    return path, len(visited)
+        children = current.expand()
+        pos = tuple(current.positions)
+        visited.add(pos)
+        for node in children:
+            pos = tuple(node.positions)
+            if pos not in visited:
+                dfs(node, goal, visited, stack+[node])
+        #if pos not in visited:
+        #    visited.add(pos)
+        #    queue.extend(current.expand())
+    return [], len(visited)
 
 
 def isSolution(node, goal):
