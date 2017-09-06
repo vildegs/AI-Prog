@@ -29,9 +29,9 @@ def bfs(root,goal):
         if isSolution(current, goal):
             path = []
             while current.parent:
-                path.append(current)
+                path.append(current.positions)
                 current = current.parent
-            path.append(current)
+            path.append(current.positions)
             return path[::-1], len(visited)
         pos = tuple(current.positions)
         if pos not in visited:
