@@ -6,9 +6,6 @@ def bfs(root,goal):
     while opened:
         print(len(visited))
         current = opened.pop(0)
-        #print(current)
-        #print(len(opened))
-        #print("------------------")
         if isSolution(current, goal):
             path = []
             while current.parent:

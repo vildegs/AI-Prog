@@ -66,7 +66,7 @@ class Node:
         return newBoard, newPos
 
     def canMove(self, direction, carSize, position, fixedPos, orientation):
-        #left
+            #left
         if orientation ==0:
             if direction ==0 and position>0 :
                 return self.board[fixedPos][position-1]=='.'
