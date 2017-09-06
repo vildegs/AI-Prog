@@ -1,5 +1,6 @@
 from copy import deepcopy
 import static
+import main
 
 class Node:
     g = 0
@@ -32,7 +33,8 @@ class Node:
             for j in range(static.directions):
                 if self.canMove(j, carSize, position, fixedPos, orientation):
                     newBoard, newPos = self.move(j,carSize,position,fixedPos,i)
-                    children.append(self.createSuccessor(newBoard, newPos))
+                    if newBoard != prevBoard:
+                        children.append(self.createSuccessor(newBoard, newPos))
         return children
 
     def createSuccessor(self, newBoard, newPos):

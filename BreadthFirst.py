@@ -1,4 +1,4 @@
-def main():
+def bfs():
     global numCars, constantPos, orientations, lengths
     example, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
     root = Node(None, 0, example, positions, [])

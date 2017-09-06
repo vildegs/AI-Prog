@@ -29,6 +29,7 @@ def astar(start, goal, board):
             else:
                 node.g = current.g +1
                 node.h = heuristic(node, goal)
+                print(node.h)
                 node.parent = current
                 opened.add(node)
     return [], len(closed)
