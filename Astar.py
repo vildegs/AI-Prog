@@ -1,5 +1,6 @@
 import static
 
+
 def astar(start, goal, board):
     opened = set()
     closed = set()

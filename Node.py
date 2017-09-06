@@ -33,7 +33,11 @@ class Node:
             for j in range(static.directions):
                 if self.canMove(j, carSize, position, fixedPos, orientation):
                     newBoard, newPos = self.move(j,carSize,position,fixedPos,i)
+<<<<<<< HEAD
                     if newBoard != prevBoard:
+=======
+                    if newBoard != self.prevBoard:
+>>>>>>> 3238d6b39adc3f86c3c2f7e38a86e511e5d42969
                         children.append(self.createSuccessor(newBoard, newPos))
         return children
 
@@ -67,7 +71,7 @@ class Node:
         return newBoard, newPos
 
     def canMove(self, direction, carSize, position, fixedPos, orientation):
-        #left
+            #left
         if orientation ==0:
             if direction ==0 and position>0 :
                 return self.board[fixedPos][position-1]=='.'
