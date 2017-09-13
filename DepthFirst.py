@@ -1,6 +1,7 @@
 
 
 def dfs(root, goal):
+    print("DFS")
     visited, stack = set(), [root]
     while stack:
         current = stack.pop(0)
@@ -8,9 +9,9 @@ def dfs(root, goal):
             print("Solution found!")
             path = []
             while current.parent:
-                path.append(current)
+                path.append(current.positions)
                 current = current.parent
-            path.append(current)
+            path.append(current.positions)
             return path[::-1], len(visited)
         children = current.expand()
         #for i in children:

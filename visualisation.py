@@ -5,11 +5,11 @@ import static
 pygame.font.init()
 
 class Visualisation:
-    def __init__(self, positions, tile=80):
-        #self.vehicles = list(root.vehicles)
-        #self.path = path
+    def __init__(self, positions, pathLength, nodesExpanded, tile=80):
         self.positions = positions
         self.tile = tile
+        self.pathLength = pathLength
+        self.nodesExpanded=nodesExpanded
         self.width = 6 * self.tile
         self.colors = self.get_colors()
 
@@ -32,6 +32,7 @@ class Visualisation:
 
         # start visualisation
         self.run()
+
 
     def get_colors(self):
         """
@@ -57,10 +58,21 @@ class Visualisation:
             self.window.fill((255, 255, 255))
             self.draw_board(self.positions.pop(0))
             pygame.display.update()
-            pygame.time.wait(1500)
+            pygame.time.wait(300)
 
+        myfont =pygame.font.Font(pygame.font.get_default_font(), 60)
+        myfont2 =pygame.font.Font(pygame.font.get_default_font(), 40)
+        textsurface1 = myfont.render('FINITO', True, (0, 0, 0))
+        textsurface2 = myfont2.render('Length of path: '+str(self.pathLength), True,(0,0,0))
+        textsurface3 = myfont2.render('Nodes expanded: '+str(self.nodesExpanded), True,(0,0,0))
+        self.window.blit(textsurface1,(60,80))
+        self.window.blit(textsurface2,(60,140))
+        self.window.blit(textsurface3, (60,200))
+        pygame.display.update()
+        self.pause
         # wait for input to quit
         while True:
+
             for event in pygame.event.get():
                 if event.type == QUIT or event.type == KEYDOWN:
                     self.exit()
@@ -95,7 +107,7 @@ class Visualisation:
                 self.pause()
 
 
-    def exit():
+    def exit(self):
         """
         quit the visualisation
         """

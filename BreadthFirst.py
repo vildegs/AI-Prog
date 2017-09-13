@@ -1,26 +1,7 @@
-<<<<<<< HEAD
-def bfs():
-    global numCars, constantPos, orientations, lengths
-    example, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
-    root = Node(None, 0, example, positions, [])
-    opened.append(root)
-    print("ROOT")
-    root.printBoard()
-    while len(opened) != 0:
-        current = opened.pop(0)
-        if isSolution(current):
-            print("Hurra")
-            current.printBoard()
-            break
-        current.expand()
-        closed.append(current)
-        #current.printBoard()
-    path = [current.board]
-=======
->>>>>>> 3238d6b39adc3f86c3c2f7e38a86e511e5d42969
 
 
 def bfs(root,goal):
+    print("BFS")
     visited, opened = set(), [root]
     path = []
     while opened:
@@ -36,8 +17,8 @@ def bfs(root,goal):
         pos = tuple(current.positions)
         if pos not in visited:
             visited.add(pos)
+            print("Riktig",len(current.expand()))
             opened.extend(current.expand())
-
     return path, len(visited)
 
 def isSolution(node, goal):

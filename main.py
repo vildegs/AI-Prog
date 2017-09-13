@@ -1,23 +1,22 @@
-from Astar import astar
+from astar import astar
 from breadthFirst import bfs
 from depthFirst import dfs
 import node
 import static
+import visualisation
 
 
-def readFromFile():
+def readFromFile(fileName):
     numCars = 0
     readFile = []
-    #file = open("expert-2.txt",'r')
-    #file = open("hard-3.txt",'r')
-    #file = open("medium-1.txt", 'r')
-    file = open ("easy-3.txt", 'r')
+    file = open(fileName,'r')
     for line in file:
         numCars +=1
         cur =[]
         for i in line.split(','):
             cur.append(int(i))
         readFile.append(cur)
+    file.close()
     return readFile
 
 def createState(readFile):
@@ -61,21 +60,34 @@ def printBoard(board):
         print ("\n")
     print("\n")
 
-
-
+fileNames = ["easy-3.txt","medium-1.txt","hard-3.txt","expert-2.txt"]
+algorithms = [bfs, dfs, astar]
+algorithmsToPrint=["bfs", "dfs", "astar"]
 
 def main():
-    board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile())
+
+    print("\nRUSH HOUR GAME \n")
+    print("Choose board: ")
+    for i in range(len(fileNames)):
+        print(str(i) + ": "+fileNames[i])
+
+    index = input()
+    print("\n")
+    board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile(fileNames[index]))
     static.setVariables(constantPos, orientations, lengths, numCars)
     root = node.Node(None, board, positions, [])
-    #path, expanded = astar(root,4, board)
-    path, expanded = bfs(root, 4)
-    #path, expanded = dfs(root, 4)
-    for i in range(len(path)):
-        printBoard(path[i].board)
+    print("Choose algorithm: ")
+    for i in range(len(algorithms)):
+        print(str(i) + ": "+ str(algorithmsToPrint[i]))
+
+    index = input()
+    print (index)
+    path, expanded = algorithms[index](root, 4)
+
+    path, expanded = astar(root,4)
     print("Path length: ",len(path)-1)
     print("Expanded nodes: ", expanded)
-    vis = visualisation.Visualisation(path)
+    vis = visualisation.Visualisation(path,len(path)-1, expanded)
 
 
 main()
