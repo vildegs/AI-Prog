@@ -1,12 +1,12 @@
 
 #takes in the variables, domains and constraint for the problem
 def gac(var, dom, cons):
+    #the domain 
     #TODO Initialization
     #A set of revises to do
     #Each revise contain an variable Xij and an contraint Ci
     #i is the number of the constraint and j the number of variable X is in Ci
-    GAC-initialize()
-    queue = ??{todoRevise(every variable and every constraint)}
+    queue = GAC-initialize(var, cons)
 
     #TODO Domain-Filtering Loop
     GAC-Domain-Filtering-Loop()
@@ -15,16 +15,27 @@ def gac(var, dom, cons):
     #if not: do A*-search, having the root = current state
     astar(root, goal)
 
+#combine variables and constraints
+def GAC-initialize(variables, constraints):
+    queue = []
+    for contraint in constraints:
+        for var in variables:
+            if constraint.hasVar(var):
+                queue.append(tuple(var,constraint))
+    return queue
 
-def GAC-initialize():
-    return #initialState
 
 def GAC-Domain-Filtering-Loop():
     while queue:
-        todoRevise(node, constraint) = queue.pop()
+        #todoRevise = (var, constraint)
+        todoRevise = queue.pop(0)
         reduced = revise(variable,constraint)
         if reduced:
             #push todorevise(Xkm,Ck) to queue for all Ck (k!=i) where X* appears and all Xk,m != X*
+
+#remove all x in the domain of the variable where there are no (x,y) that satisfy the constraint
+def revise(var, constraint):
+    return constraint.isValid()
 
 def GAC-rerun():
 
