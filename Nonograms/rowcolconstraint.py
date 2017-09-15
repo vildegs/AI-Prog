@@ -1,55 +1,34 @@
 
+from constraint import Constraint
 
-class Rowcolconstraint(Constraint):
+class RowCol(Constraint):
     index = None
-    def __init__(self, index, variables):
-        Constraint.__init__(self.variables)
+    def __init__(self, dir,index, variables):
+        Constraint.__init__(self, variables)
         self.index  =index
 
-    def isValid(variable, value, domains):
+    def isValid(self,variable, value, domains):
+        #return True
+        toCheck = filter(lambda var : var[0]==variable[0] and var[1]==variable[1], self.variables)
         segNr = variable[2]
-        left = variables[:segNr]
-        right = variables[segNr+1:]
-        for var in left:
-            domain = domains[var]
+        #checking the segment before
+        if segNr !=0:
+            before = toCheck[segNr-1]
             valid = False
-            for val in domain:
-                if val+var[3]<value:
+            for i in domains[before]:
+                if value > i + before[3]:
                     valid = True
                     break
-            if valid ==False:
+            if valid == False:
                 return False
-        for var in right:
-            domain = domains[var]
-            valid = False
-            for val in domain:
-                if val=var[3]>value+variable[3]:
+        #checking the next segment
+        if segNr != len(toCheck)-1:
+            after = toCheck[segNr+1]
+            for i in domains[after]:
+                if value < i:
                     valid = True
                     break
-            if valid ==False:
+            if valid == False:
                 return False
-        return valid
-
-
-
-
-
-def domain(index, segments, sumSegments, numSegments, id):
-    if id ==1:
-        length = numcols
-    else:
-        length = numrows
-    #first
-    '''if index == 0:
-        dom = [i for i in range(length-numSegments-sumSegments)]
-    #last
-    elif index == numSegments-1:
-        dom = [i for i in range(sumSegments+numSegments-segments[index]-1,length-segments[index]+1)]
-    #other
-else:'''
-    left = segments[:index]
-    right = segments[index+1:]
-    leftlim = sum(left)+len(left)
-    rightlim = length-(sum(right)+len(right))-segments[index]+1
-    dom = [i for i in range(leftlim, rightlim)]
-    return dom
+        #if it is the only segment in this row/col
+        return True
