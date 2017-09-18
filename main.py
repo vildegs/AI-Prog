@@ -1,4 +1,6 @@
-from astar import astar
+
+#from astarRushHour import RushHour
+from astarRushHour import RushHour
 from breadthFirst import bfs
 from depthFirst import dfs
 import node
@@ -61,7 +63,6 @@ def printBoard(board):
     print("\n")
 
 fileNames = ["easy-3.txt","medium-1.txt","hard-3.txt","expert-2.txt"]
-algorithms = [bfs, dfs, astar]
 algorithmsToPrint=["bfs", "dfs", "astar"]
 
 def main():
@@ -76,15 +77,15 @@ def main():
     board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile(fileNames[index]))
     static.setVariables(constantPos, orientations, lengths, numCars)
     root = node.Node(None, board, positions, [])
+    search = RushHour()
+    astar = search.astar
+    algorithms = [bfs, dfs, astar]
     print("Choose algorithm: ")
     for i in range(len(algorithms)):
         print(str(i) + ": "+ str(algorithmsToPrint[i]))
-
     index = input()
     print (index)
     path, expanded = algorithms[index](root, 4)
-
-    path, expanded = astar(root,4)
     print("Path length: ",len(path)-1)
     print("Expanded nodes: ", expanded)
     vis = visualisation.Visualisation(path,len(path)-1, expanded)

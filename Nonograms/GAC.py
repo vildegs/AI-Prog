@@ -16,17 +16,74 @@ def gac(var, dom, cons):
     constraints = cons
     domains = dom
     queue = GACinitialize(variables, constraints)
+    print("KO",len(queue))
     #printQueue()
     printDomains(domains)
 
     GACDomainFilteringLoop()
     #printQueue()
-    print ""
+    print " "
     printDomains(domains)
 
     #check is the current state is a solution, each domain has only one value
     #if not: do A*-search, having the root = current state
-    #astar(root, goal)
+    astar(domains, goal)
+
+def astar(root, goal):
+    current = root
+    opened = set()
+    closed = set()
+    #make assumptions to create successor states
+    children = expand()
+    for state in children:
+        GAC-rerun(state)
+        #calculate the f, g and h values for the children states
+
+opened = dict()
+closed = dict()
+#currentHash = start.getHash()
+opened[start[0]]=start[1]
+while opened:
+    current = opened[min(opened, key = lambda n: opened[n].g + opened[n].h)]
+    currentHash = current.getHash()
+    if isSolution(current,goal):
+        return constructPath(current), len(closed)
+    opened.pop(currentHash)
+    closed[currentHash]=current
+    children = current.expand()
+    for (key, node) in children:
+        #nodeHash = node.getHash()
+        if key in closed:
+            #TODO update if lower values, children aswell
+            print("Already expanded and closed")
+        elif key in opened:
+            newG = current.g + 1
+            if node.g > newG:
+                node.g = newG
+                node.parent = current
+        else:
+            node.g = current.g +1
+            node.h = heuristic(node, goal)
+            node.parent = current
+            opened[nodeHash]= node
+return [], len(closed)
+def heuristic():
+    #calculate the size of each domain minus one
+    #sum these
+    return 0
+
+#how can we have an input goal
+def isSolution(goal):
+    for varDom in domains:
+        if varDom != 1:
+            return False
+    return True
+
+
+def expand():
+    #list of successor states, do not have to reduce the other domains here
+    #the domain of the assumed variable is reduced to a singleton set
+    return
 
 def printVariables():
     for var in variables:
@@ -84,7 +141,6 @@ def GACDomainFilteringLoop():
 #remove all x in the domain of the variable where there are no (x,y) that satisfy the constraint
 def revise(var, constraint):
     global domains
-
     domain = domains[var]
     newDomain =[]
     isReduced = False
@@ -93,17 +149,19 @@ def revise(var, constraint):
             newDomain.append(value)
         else:
             isReduced =True
+
     if newDomain!=domains[var]:
+        print constraint
         print "Changed"
         print var
         print("new: ",newDomain)
         print("old: ", domains[var])
+    else:
+        print constraint
+        print "Not Changed"
 
     domains[var]=newDomain
     return isReduced
-
-
-
 
 def GACrerun():
     print ""

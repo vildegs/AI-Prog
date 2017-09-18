@@ -1,27 +1,30 @@
+from astarGeneral import Astar
 
+class Nonogram(Astar):
+
+    def __init__(self):
+        Astar.__init__(self,self.heuristic,self.isSolution)
+    '''
 def astar(root, goal):
     current = root
 
     #make assumptions to create successor states
-    children = expand()
+    children = current.expand()
     for state in children:
         GAC-rerun(state)
         #calculate the f, g and h values for the children states
-
+'''
 def heuristic():
     #calculate the size of each domain minus one
     #sum these
-    return #the sum
+    h =0
+    for domain in domains:
+        h= h + len(domain)-1
+    return h
 
 #how can we have an input goal
 def isSolution(goal):
-    for varDom in domains:
-        if varDom != 1:
+    for domain in domains.values:
+        if len(domain) != goal:
             return False
     return True
-
-
-def expand():
-    #list of successor states, do not have to reduce the other domains here
-    #the domain of the assumed variable is reduced to a singleton set
-    return

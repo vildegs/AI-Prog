@@ -16,6 +16,9 @@ class Node:
         self.positions = positions
         self.prevBoard = prevBoard
 
+    def getHash(self):
+        return tuple(self.positions)
+
     def expand(self):
         children = []
         if self.parent != None:
@@ -35,11 +38,9 @@ class Node:
                     newBoard, newPos = self.move(j,carSize,position,fixedPos,i)
                     if newBoard != self.prevBoard:
                         children.append(self.createSuccessor(newBoard, newPos))
-
         return children
-    def getHash(self):
-        return tuple(self.positions)
-        
+
+
     def createSuccessor(self, newBoard, newPos):
         return Node(self, newBoard, newPos, self.board)
 

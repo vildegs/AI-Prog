@@ -5,8 +5,9 @@ import static
 pygame.font.init()
 
 class Visualisation:
-    def __init__(self, positions, pathLength, nodesExpanded, tile=80):
-        self.positions = positions
+    def __init__(self, path, pathLength, nodesExpanded, tile=80):
+        self.path = path
+        self.positions = self.getPositions(path)
         self.tile = tile
         self.pathLength = pathLength
         self.nodesExpanded=nodesExpanded
@@ -18,7 +19,7 @@ class Visualisation:
         self.window = pygame.display.set_mode((self.width, self.width))
         pygame.display.set_caption('Rush Hour')
         self.window.fill((255, 255, 255))
-        self.draw_board(positions[0])
+        self.draw_board(self.positions[0])
         pygame.display.update()
 
         # pause visualisation (wait for input)
@@ -33,6 +34,11 @@ class Visualisation:
         # start visualisation
         self.run()
 
+    def getPositions(self, path):
+        positions = []
+        for i in range (len (path)):
+            positions.append (path[i].positions)
+        return positions
 
     def get_colors(self):
         """
@@ -72,7 +78,6 @@ class Visualisation:
         self.pause
         # wait for input to quit
         while True:
-
             for event in pygame.event.get():
                 if event.type == QUIT or event.type == KEYDOWN:
                     self.exit()
@@ -85,15 +90,12 @@ class Visualisation:
             length = static.lengths[i]
             pos = positions[i]
             fixedPos = static.constantPos[i]
-
             # draw horizontally orientated vehicles
             if static.orientations[i] ==0:
-                pygame.draw.rect(self.window, self.colors[i], (pos*self.tile , fixedPos*self.tile,
-                                                                   length *self.tile, self.tile))
+                pygame.draw.rect(self.window, self.colors[i], (pos*self.tile , fixedPos*self.tile, length*self.tile, self.tile))
             # draw vertically orientated vehicles
             else:
-                pygame.draw.rect(self.window, self.colors[i], (fixedPos* self.tile, pos * self.tile,
-                                                                   self.tile, length*self.tile))
+                pygame.draw.rect(self.window, self.colors[i], (fixedPos* self.tile, pos*self.tile,self.tile, length*self.tile))
     def check_input(self):
         """
         checks for input which pauses or quits the visualisation

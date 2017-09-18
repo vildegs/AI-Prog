@@ -3,6 +3,8 @@ from rowcolConstraint import RowCol
 from GAC import gac
 numcols = 0
 numrows = 0
+
+
 def readFile(filename):
     global numrows, numcols
     rows, cols , doc= [], [], []
@@ -90,7 +92,7 @@ def printDomains(domains):
         print (key, domains[key])
 
 def main():
-    rows,cols = readFile("nono-sailboat.txt")
+    rows,cols = readFile("nono-elephant.txt")
     variables = initVariables(rows, cols)
     print(variables)
     rowVar = filter(lambda var: var[0]==0, variables)
