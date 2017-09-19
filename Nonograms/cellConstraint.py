@@ -11,7 +11,8 @@ class Cell(Constraint):
         self.y = y
 
     def toString(self):
-
+        print ""
+        print "CellConstraint"
         print "Cell: (",self.x,",",self.y,")"
         print "Variables: ",self.variables
 
@@ -30,16 +31,17 @@ class Cell(Constraint):
                 return True
 
         #if it is valid, it has to check the corresponding row/col
-        #taking out the varia to check
+        #taking out the variables to check
         toCheck = filter (lambda var: var[0]!=roworcol, self.variables)
         #goes through all of the ones in the same row/col and check if one of them can fill the row/col
-        #print toCheck
+        #print "Variable: ", variable
+        #print "Value: ", value
         for var in toCheck:
             #print "Var",var
+            #print domains[var]
             length = var[3]
             for posStart in domains[var]:
-                #print "Start: ",posStart
                 if posStart <= rowcolIndex and rowcolIndex < posStart+length:
-                    #print "Found possibility"
+                    #print posStart
                     return True
         return False

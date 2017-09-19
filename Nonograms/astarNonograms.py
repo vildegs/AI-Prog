@@ -1,5 +1,4 @@
-import sys
-sys.path.append('.')
+
 from astarGeneral import Astar
 
 class Nonogram(Astar):

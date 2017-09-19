@@ -10,14 +10,21 @@ class Node:
     positions = []
     prevBoard = []
 
-    def __init__(self, parent, board, positions, prevBoard):
+    def __init__(self, parent, board, positions, prevBoard, children = []):
         self.parent = parent
         self.board = board
         self.positions = positions
         self.prevBoard = prevBoard
+        self.children = children
 
     def getHash(self):
         return tuple(self.positions)
+
+    def updateChildren(self, g):
+        self.g = g
+        for child in children:
+            if g + 1 < child.g:
+                child.updateChildren(g+1)
 
     def expand(self):
         children = []

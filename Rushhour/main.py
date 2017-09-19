@@ -2,7 +2,7 @@
 from astarRushHour import RushHour
 from breadthFirst import bfs
 from depthFirst import dfs
-import node
+from node import Node
 import static
 import visualisation
 
@@ -75,7 +75,7 @@ def main():
     print("\n")
     board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile(fileNames[index]))
     static.setVariables(constantPos, orientations, lengths, numCars)
-    root = node.Node(None, board, positions, [])
+    root = Node(None, board, positions, [])
     search = RushHour()
     astar = search.astar
     algorithms = [bfs, dfs, astar]

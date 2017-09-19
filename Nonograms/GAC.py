@@ -81,11 +81,19 @@ def GACrerun(node):
     global domains, queue
     queue = []
     domains = node.domains
+    #print "Before: ",domains
+    #print "Variables",variables
+    #printConstraints()
+    #print "Variable", node.variable
     for otherVar in variables:
         for constraint in constraints:
             if constraint.hasVar(otherVar) and otherVar != node.variable and constraint.hasVar(node.variable):
+                #print "Adding to queue"
+                #print otherVar
+                #constraint.toString()
                 queue.append((otherVar, constraint))
     GACDomainFilteringLoop()
+    #print "After", domains
     if emptyDomains(domains):
         domains = False
     return domains

@@ -1,5 +1,6 @@
 from cellConstraint import Cell
 from rowcolConstraint import RowCol
+from boardConstraint import Board
 from GAC import gac
 numcols = 0
 numrows = 0
@@ -74,14 +75,14 @@ def initConstraints(variables):
             if variable[0] == 1 and variable[1]==i:
                 affectedVar.append(variable)
         constraints.append(RowCol(1,i, affectedVar))
-
-
     for i in range(numrows):
         for j in range(numcols):
             affectedVar = []
             affectedVar = filter(lambda var: (var[0]==0 and var[1]==i) or (var[0]==1 and var[1]==j), variables)
             #print i, j, affectedVar
             constraints.append(Cell(j,i,affectedVar))
+
+    constraints.append(Board(variables,numrows, numcols))
 
     return constraints
 
@@ -103,19 +104,15 @@ def main():
     index = menu()
     filename = "nono-"+files[index]+".txt"
     print "Chosen file: ", files[index]
-    print ""
     rows,cols = readFile(filename)
     variables = initVariables(rows, cols)
     rowVar = filter(lambda var: var[0]==0, variables)
     colVar = filter (lambda var: var[0]==1, variables)
     domains= initDomains(variables, rows, cols)
-    print domainSize(domains)
     constraints = initConstraints(variables)
-    #printDomains(domains)
     path, expanded = gac(variables, domains,constraints)
-    #printDomains(path[len(path)-1].domains)
-    if path:
-        print "Solution"
+    if len(path)>0:
+        print "Solution found"
         showSolution(path[len(path)-1], rows, cols)
     else:
         print "Could not find solution"
@@ -129,35 +126,24 @@ def domainSize(domains):
 
 def showSolution(sol, rows, cols):
     board = [['.' for i in range(len(cols))] for j in range(len(rows))]
-
-    print len(cols)
-    print len(rows)
-    print "y:",len(board)
-    print "x: ",len(board[0])
     for variable in sol.domains:
         if variable[0]==0:
-
             x  = sol.domains[variable][0]
             y = len(rows)-variable[1]-1
             for i in range(variable[3]):
                 board[y][x+i]='x'
         else:
-
             y  = len(rows)-sol.domains[variable][0]-1
-
             x = variable[1]
-
-            print variable[3]
             for i in range(variable[3]):
-
-
                 board[y-i][x]='x'
-
-
     for i in range(len(board)):
         for j in range(len(board[i])):
             print board[i][j],
         print " "
 
+def printConstraints(constraints):
+    for constraint in constraints:
+        constraint.toString()
 
 main()

@@ -10,6 +10,8 @@ class RowCol(Constraint):
         self.index = index
 
     def toString(self):
+        print ""
+        print "RowColConstraint"
         if self.roworcol == 0:
             print "Row: ", self.index
         else:

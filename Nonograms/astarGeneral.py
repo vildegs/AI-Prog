@@ -8,23 +8,31 @@ class Astar(object):
     def astar(self,start, goal):
         print "Starting A*"
         opened = dict()
-        closed = set()
+        closed = dict()
         start.h = self.heuristic(start, goal)
         current = start
         opened[start.getHash()]=start
         print "Start domain: ",start.domains
         print "Looking for solution..."
         while opened:
+
+            #print "Opened"
+            #self.printOpened(opened)
             current = opened[min(opened, key = lambda n: opened[n].g + opened[n].h)]
+            #print "Chosen"
+            #current.toString()
             if self.isSolution(current,goal):
                 return self.constructPath(current), len(closed)
             del opened[current.getHash()]
-            closed.add(current)
+            closed[current.getHash()]=current
             successors = current.expand()
             for node in successors:
-                if node in closed:
-                    #TODO update if lower values, children aswell
-                    continue
+                '''
+                if node.getHash() in closed:
+                    newG = current.g + 1
+                    if node.g > newG:
+                        node.updateChildren(newG)
+            '''
                 if node.getHash() in opened:
                     newG = current.g + 1
                     if node.g > newG:
