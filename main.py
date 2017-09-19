@@ -1,5 +1,4 @@
 
-#from astarRushHour import RushHour
 from astarRushHour import RushHour
 from breadthFirst import bfs
 from depthFirst import dfs

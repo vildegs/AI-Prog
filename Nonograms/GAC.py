@@ -1,8 +1,13 @@
 
+from astarNonograms import Nonogram
+
 queue = []
 variables = []
 constraints = []
 domains = {}
+search = Nonogram()
+astar = search.astar
+goal =1
 
 #takes in the variables, domains and constraint for the problem
 def gac(var, dom, cons):
@@ -22,86 +27,12 @@ def gac(var, dom, cons):
 
     GACDomainFilteringLoop()
     #printQueue()
-    print " "
     printDomains(domains)
 
-    #check is the current state is a solution, each domain has only one value
-    #if not: do A*-search, having the root = current state
-    astar(domains, goal)
+    from node import Node
+    root = Node (None, domains, None)
+    return astar(root, goal)
 
-def astar(root, goal):
-    current = root
-    opened = set()
-    closed = set()
-    #make assumptions to create successor states
-    children = expand()
-    for state in children:
-        GAC-rerun(state)
-        #calculate the f, g and h values for the children states
-
-opened = dict()
-closed = dict()
-#currentHash = start.getHash()
-opened[start[0]]=start[1]
-while opened:
-    current = opened[min(opened, key = lambda n: opened[n].g + opened[n].h)]
-    currentHash = current.getHash()
-    if isSolution(current,goal):
-        return constructPath(current), len(closed)
-    opened.pop(currentHash)
-    closed[currentHash]=current
-    children = current.expand()
-    for (key, node) in children:
-        #nodeHash = node.getHash()
-        if key in closed:
-            #TODO update if lower values, children aswell
-            print("Already expanded and closed")
-        elif key in opened:
-            newG = current.g + 1
-            if node.g > newG:
-                node.g = newG
-                node.parent = current
-        else:
-            node.g = current.g +1
-            node.h = heuristic(node, goal)
-            node.parent = current
-            opened[nodeHash]= node
-return [], len(closed)
-def heuristic():
-    #calculate the size of each domain minus one
-    #sum these
-    return 0
-
-#how can we have an input goal
-def isSolution(goal):
-    for varDom in domains:
-        if varDom != 1:
-            return False
-    return True
-
-
-def expand():
-    #list of successor states, do not have to reduce the other domains here
-    #the domain of the assumed variable is reduced to a singleton set
-    return
-
-def printVariables():
-    for var in variables:
-        print var
-
-def printDomains(domains):
-    for key in domains.keys():
-        print (key, domains[key])
-
-def printConstraints():
-    for constraint in constraints:
-        constraint.toString()
-
-def printQueue():
-    count =1
-    for (var, cons) in queue:
-        print (count," Var: ", var, "Constraint: ", cons)
-        count +=1
 
 #combine variables and constraints
 def GACinitialize(variables, constraints):
@@ -112,16 +43,13 @@ def GACinitialize(variables, constraints):
     return queue
 
 def emptyDomains(domains):
-    for (var, domain) in domains:
-        if len(domain)==0:
+    for variable in domains:
+        if len(domains[variable])==0:
             return True
     return False
 
 def GACDomainFilteringLoop():
-    counter = 0
     while queue:
-        #print counter
-        counter +=1
         (variable, constraint) = queue.pop(0)
         isReduced = revise(variable,constraint)
         if isReduced:
@@ -142,6 +70,7 @@ def GACDomainFilteringLoop():
 def revise(var, constraint):
     global domains
     domain = domains[var]
+
     newDomain =[]
     isReduced = False
     for value in domain:
@@ -149,19 +78,36 @@ def revise(var, constraint):
             newDomain.append(value)
         else:
             isReduced =True
-
-    if newDomain!=domains[var]:
-        print constraint
-        print "Changed"
-        print var
-        print("new: ",newDomain)
-        print("old: ", domains[var])
-    else:
-        print constraint
-        print "Not Changed"
-
     domains[var]=newDomain
     return isReduced
 
-def GACrerun():
-    print ""
+def GACrerun(node):
+    global domains
+    domains = node.domains
+    for otherVar in variables:
+        for constraint in constraints:
+            if constraint.hasVar(node.variable) and otherVar != node.variable:
+                queue.append((otherVar, constraint))
+    GACDomainFilteringLoop()
+    if emptyDomains(domains):
+        domains = False
+    return domains
+
+#Debugging
+def printVariables():
+    for var in variables:
+        print var
+
+def printDomains(domains):
+    for key in domains.keys():
+        print (key, domains[key])
+
+def printConstraints():
+    for constraint in constraints:
+        constraint.toString()
+
+def printQueue():
+    count =1
+    for (var, cons) in queue:
+        print (count," Var: ", var, "Constraint: ", cons)
+        count +=1

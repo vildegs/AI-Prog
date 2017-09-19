@@ -19,8 +19,8 @@ class Cell(Constraint):
         #check if var in col or row
         roworcol = variable[0]
         rowcolIndex = variable[1]
-        print "Var to reduce domain",variable
-        print "Domain value to check", value
+        #print "Var to reduce domain",variable
+        #print "Domain value to check", value
         if roworcol == 0:
             if value != self.x:
                 return True
@@ -32,13 +32,13 @@ class Cell(Constraint):
         #taking out the varia to check
         toCheck = filter (lambda var: var[0]!=roworcol, self.variables)
         #goes through all of the ones in the same row/col and check if one of them can fill the row/col
-        print toCheck
+        #print toCheck
         for var in toCheck:
-            print "Var",var
+            #print "Var",var
             length = var[3]
             for posStart in domains[var]:
-                print "Start: ",posStart
+                #print "Start: ",posStart
                 if posStart <= rowcolIndex and rowcolIndex < posStart+length:
-                    print "Found possibility"
+                    #print "Found possibility"
                     return True
         return False

@@ -92,14 +92,58 @@ def printDomains(domains):
         print (key, domains[key])
 
 def main():
-    rows,cols = readFile("nono-elephant.txt")
+    rows,cols = readFile("example.txt")
     variables = initVariables(rows, cols)
-    print(variables)
     rowVar = filter(lambda var: var[0]==0, variables)
     colVar = filter (lambda var: var[0]==1, variables)
     domains= initDomains(variables, rows, cols)
     constraints = initConstraints(variables)
     #printDomains(domains)
-    gac(variables, domains,constraints)
+    path, expanded = gac(variables, domains,constraints)
+    #printDomains(path[len(path)-1].domains)
+    if path:
+        print "Solution"
+        printDomains(path.domains)
+        #showSolution(path[len(path)-1], rows, cols)
+    else:
+        print "Could not find solution"
+
+
+def showSolution(sol, rows, cols):
+    board = [['.' for i in range(len(cols))] for j in range(len(rows))]
+
+    print len(cols)
+    print len(rows)
+    print "y:",len(board)
+    print "x: ",len(board[0])
+    for variable in sol.domains:
+        if variable[0]==0:
+            #print sol.domains[variable][0]
+            x  = sol.domains[variable][0]
+            y = len(rows)-variable[1]-1
+            for i in range(variable[3]):
+                board[y][x+i]='x'
+        else:
+            #print sol.domains[variable]
+            y  = len(rows)-sol.domains[variable][0]-1
+            #print y
+            x = variable[1]
+            #print "x" ,x
+            print variable[3]
+            for i in range(variable[3]):
+                print "y", y-i
+                print "x", x
+                print(board[8][7])
+                board[y-i][x]='x'
+                print "y", y-i
+                print "x", x
+
+
+
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            print board[i][j],
+        print " "
+
 
 main()

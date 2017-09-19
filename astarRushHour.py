@@ -4,7 +4,7 @@ from astarGeneral import Astar
 class RushHour(Astar):
 
     def __init__(self):
-        super(RushHour, self).__init__()#self.heuristic,self.isSolution)
+        super(RushHour, self).__init__()
 
     def isSolution(self, node, goal):
         return node.positions[0]==goal
