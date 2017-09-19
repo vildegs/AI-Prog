@@ -35,8 +35,6 @@ def initVariables(rows, cols):
 def initDomains(variables, rows, cols):
     domains = {}
     count = 0
-    print rows
-    print cols
     for i in range(len(rows)):
         for segNr in range(len(rows[i])):
             numSegments = len(rows[i])
@@ -91,22 +89,42 @@ def printDomains(domains):
     for key in domains.keys():
         print (key, domains[key])
 
+files = ["cat", "chick", "clover","elephant", "fox","rabbit", "reindeer", "sailboat", "snail2", "telephone"]
+def menu():
+    print "Alternative nonograms"
+    for i in range(1,len(files)+1):
+        print i, ": ", files[i-1]
+    print "Choose file:"
+    return input()-1
+
 def main():
-    rows,cols = readFile("example.txt")
+    print "NONOGRAMS"
+    print ""
+    index = menu()
+    filename = "nono-"+files[index]+".txt"
+    print "Chosen file: ", files[index]
+    print ""
+    rows,cols = readFile(filename)
     variables = initVariables(rows, cols)
     rowVar = filter(lambda var: var[0]==0, variables)
     colVar = filter (lambda var: var[0]==1, variables)
     domains= initDomains(variables, rows, cols)
+    print domainSize(domains)
     constraints = initConstraints(variables)
     #printDomains(domains)
     path, expanded = gac(variables, domains,constraints)
     #printDomains(path[len(path)-1].domains)
     if path:
         print "Solution"
-        printDomains(path.domains)
-        #showSolution(path[len(path)-1], rows, cols)
+        showSolution(path[len(path)-1], rows, cols)
     else:
         print "Could not find solution"
+
+def domainSize(domains):
+    sum = 0
+    for variable, domain in domains.iteritems():
+        sum+= len(domain)
+    return sum
 
 
 def showSolution(sol, rows, cols):
@@ -118,26 +136,22 @@ def showSolution(sol, rows, cols):
     print "x: ",len(board[0])
     for variable in sol.domains:
         if variable[0]==0:
-            #print sol.domains[variable][0]
+
             x  = sol.domains[variable][0]
             y = len(rows)-variable[1]-1
             for i in range(variable[3]):
                 board[y][x+i]='x'
         else:
-            #print sol.domains[variable]
+
             y  = len(rows)-sol.domains[variable][0]-1
-            #print y
+
             x = variable[1]
-            #print "x" ,x
+
             print variable[3]
             for i in range(variable[3]):
-                print "y", y-i
-                print "x", x
-                print(board[8][7])
-                board[y-i][x]='x'
-                print "y", y-i
-                print "x", x
 
+
+                board[y-i][x]='x'
 
 
     for i in range(len(board)):

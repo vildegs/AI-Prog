@@ -4,14 +4,20 @@ counter = 0
 
 class RowCol(Constraint):
     index = None
-    def __init__(self, dir,index, variables):
+    def __init__(self,roworcol,index, variables):
         Constraint.__init__(self, variables)
+        self.roworcol = roworcol
         self.index = index
+
+    def toString(self):
+        if self.roworcol == 0:
+            print "Row: ", self.index
+        else:
+            print "Col: ", self.index
+        print "Variables: ", self.variables
 
     def isValid(self,variable, value, domains):
         toCheck = self.variables
-        print variable
-        print toCheck
 
         segNr = variable[2]
 

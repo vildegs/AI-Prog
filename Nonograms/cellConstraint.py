@@ -10,9 +10,10 @@ class Cell(Constraint):
         self.x= x
         self.y = y
 
-        def toString():
-            print variables
-            print x,y
+    def toString(self):
+
+        print "Cell: (",self.x,",",self.y,")"
+        print "Variables: ",self.variables
 
     def isValid(self, variable, value, domains):
 

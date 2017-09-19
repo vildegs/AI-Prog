@@ -9,28 +9,24 @@ search = Nonogram()
 astar = search.astar
 goal =1
 
+def domainSize(domains):
+    sum = 0
+    for variable, domain in domains.iteritems():
+        sum+= len(domain)
+    return sum
+
 #takes in the variables, domains and constraint for the problem
 def gac(var, dom, cons):
     global variables, queue, constraints, domains
-    #the domain
-    #TODO Initialization
-    #A set of revises to do
-    #Each revise contain an variable Xij and an contraint Ci
-    #i is the number of the constraint and j the number of variable X is in Ci
     variables = var
     constraints = cons
     domains = dom
     queue = GACinitialize(variables, constraints)
-    print("KO",len(queue))
-    #printQueue()
-    printDomains(domains)
-
     GACDomainFilteringLoop()
-    #printQueue()
-    printDomains(domains)
 
     from node import Node
-    root = Node (None, domains, None)
+    root = Node (domains)
+
     return astar(root, goal)
 
 
@@ -69,8 +65,8 @@ def GACDomainFilteringLoop():
 #remove all x in the domain of the variable where there are no (x,y) that satisfy the constraint
 def revise(var, constraint):
     global domains
+    #print domains
     domain = domains[var]
-
     newDomain =[]
     isReduced = False
     for value in domain:
@@ -82,11 +78,12 @@ def revise(var, constraint):
     return isReduced
 
 def GACrerun(node):
-    global domains
+    global domains, queue
+    queue = []
     domains = node.domains
     for otherVar in variables:
         for constraint in constraints:
-            if constraint.hasVar(node.variable) and otherVar != node.variable:
+            if constraint.hasVar(otherVar) and otherVar != node.variable and constraint.hasVar(node.variable):
                 queue.append((otherVar, constraint))
     GACDomainFilteringLoop()
     if emptyDomains(domains):
@@ -109,5 +106,6 @@ def printConstraints():
 def printQueue():
     count =1
     for (var, cons) in queue:
-        print (count," Var: ", var, "Constraint: ", cons)
+        print (count," Var: ", var, "Constraint: ")
+        cons.toString()
         count +=1

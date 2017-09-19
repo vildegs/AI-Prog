@@ -6,11 +6,14 @@ class Astar(object):
         pass
 
     def astar(self,start, goal):
+        print "Starting A*"
         opened = dict()
         closed = set()
         start.h = self.heuristic(start, goal)
         current = start
         opened[start.getHash()]=start
+        print "Start domain: ",start.domains
+        print "Looking for solution..."
         while opened:
             current = opened[min(opened, key = lambda n: opened[n].g + opened[n].h)]
             if self.isSolution(current,goal):
@@ -22,24 +25,24 @@ class Astar(object):
                 if node in closed:
                     #TODO update if lower values, children aswell
                     continue
-                if node.getHash() in opened.keys():
+                if node.getHash() in opened:
                     newG = current.g + 1
                     if node.g > newG:
                         node.g = newG
                         node.parent = current
                         opened[node.getHash()]=node
                 else:
-                    node.g = current.g +1
+                    #TODO remove in both
+                    #node.g = current.g +1
                     node.h = self.heuristic(node, goal)
-                    node.parent = current
+                    #node.parent = current
                     opened[node.getHash()]=node
-        return current, len(closed)
+        return [], len(closed)
 
     def printOpened(self,opened):
         for item in opened:
             print item
-            print opened[item].g
-            print opened[item].h
+            print opened[item].g + opened[item].h
 
     def constructPath(self,current):
         path = []
