@@ -67,7 +67,7 @@ class Visualisation:
             pygame.time.wait(300)
 
         myfont =pygame.font.Font(pygame.font.get_default_font(), 60)
-        myfont2 =pygame.font.Font(pygame.font.get_default_font(), 40)
+        myfont2 =pygame.font.Font(pygame.font.get_default_font(), 30)
         textsurface1 = myfont.render('FINITO', True, (0, 0, 0))
         textsurface2 = myfont2.render('Length of path: '+str(self.pathLength), True,(0,0,0))
         textsurface3 = myfont2.render('Nodes expanded: '+str(self.nodesExpanded), True,(0,0,0))

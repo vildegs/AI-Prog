@@ -3,24 +3,34 @@ import static
 
 
 class Node:
+    g = 0
+    h = 0
+    f = 0
+    parent = None
+    board = []
+    positions = []
+    prevBoard = []
+    status = True
 
-    def __init__(self, board, positions, prevBoard, children = [], parent = None, g=0, h=0, state = True):
+    def __init__(self, board, positions, prevBoard, children = [], parent = None):
         self.parent = parent
         self.board = board
         self.positions = positions
         self.prevBoard = prevBoard
         self.children = children
-        self.g = g
-        self.h = h
-        self.f = self.g+self.h
-        self.state = state
 
     def getHash(self):
         return tuple(self.positions)
 
     def addChild(self, child):
-        self.children.append(child)
-
+        children.append(child)
+'''
+    def updateChildren(self, g):
+        self.g = g
+        for child in children:
+            if g + 1 < child.g:
+                child.updateChildren(g+1)
+'''
     def expand(self):
         children = []
         if self.parent != None:
@@ -41,6 +51,7 @@ class Node:
                     if newBoard != self.prevBoard:
                         children.append(self.createSuccessor(newBoard, newPos))
         return children
+
 
     def createSuccessor(self, newBoard, newPos):
         return Node(newBoard, newPos, self.board)
@@ -90,3 +101,11 @@ class Node:
                 return  self.board[position+carSize][fixedPos]=='.'
             else:
                 return False
+
+#TODO remove
+    def printBoard(self):
+        for row in self.board:
+            for element in row:
+                print element,
+            print ("\n")
+        print("\n")

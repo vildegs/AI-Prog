@@ -2,17 +2,27 @@ from copy import deepcopy
 
 
 class Node:
+    variable = None
+    g = 0
+    h = 0
+    parent = None
+    assumed =[]
+    domains = {}
 
-    def __init__(self, domains, variable = None, assumedVariables= [], assumedValues=[], g = 0, h=0, parent =None):
+    def __init__(self, domains, g = 0, parent =None,variable=None, assumedVariables= [], assumedValues=[]):
         self.g = g
-        self.h = h
-        self.f = self.h + self.g
         self.parent = parent
         self.domains = domains
         self.variable = variable
         self.assumedVariables = assumedVariables
         self.assumedValues = assumedValues
         self.children = []
+
+    def updateChildren(self, g):
+        self.g = g
+        for child in children:
+            if g + 1 < child.g:
+                child.updateChildren(g+1)
 
     def toString(self):
         print "Variable: ", self.variable
@@ -24,9 +34,6 @@ class Node:
 
     def getHash(self):
         return (tuple(self.assumedVariables),tuple(self.assumedValues))
-
-    def addChild(self, child):
-        self.children.append(child)
 
     def chooseVariable(self):
         posVar = filter(lambda var: var not in self.assumedVariables, self.domains)
@@ -45,10 +52,11 @@ class Node:
             newAssumedVariables.append(varToAssume)
             newAssumedValues = deepcopy(self.assumedValues)
             newAssumedValues.append(i)
-            successor = Node(newDomains,varToAssume, newAssumedVariables, newAssumedValues)
+            successor = Node(newDomains,self.g+1,self,varToAssume, newAssumedVariables, newAssumedValues)
             successor.domains = GACrerun(successor)
             #returns False if is empty domain
             if successor.domains:
+                #print successor.domains
                 successors.append(successor)
             children = successors
         return successors

@@ -6,20 +6,20 @@ def dfs(root, goal):
     while stack:
         current = stack.pop(0)
         if isSolution(current, goal):
-            print("Solution found!")
             path = []
             while current.parent:
-                path.append(current.positions)
+                path.append(current)
                 current = current.parent
-            path.append(current.positions)
+            path.append(current)
             return path[::-1], len(visited)
-        children = current.expand()
-        #for i in children:
-        #    print(i.positions,)
+        successors = current.expand()
+        #attach to parent
+        for successor in successors:
+            successor.parent = current
         pos = tuple(current.positions)
         if pos not in visited:
             visited.add(pos)
-            stack = children[::-1] + stack
+            stack = successors + stack
     return [], len(visited)
 
 

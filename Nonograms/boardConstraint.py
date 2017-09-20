@@ -3,17 +3,13 @@ from constraint import Constraint
 
 class Board(Constraint):
 
-    rows = []
-    cols = []
-    board = []
-
     def __init__(self, variables, numRows, numCols):
         Constraint.__init__(self,variables)
         self.numRows = numRows
         self.numCols = numCols
         self.rows = [0 for i in range(numRows)]
         self.cols = [0 for i in range(numCols)]
-        self.initBoard()
+        self.board = self.initBoard()
 
     def initBoard(self):
         for variable in self.variables:
@@ -36,13 +32,6 @@ class Board(Constraint):
                 row = domains[variable][0]
                 for i in range(length):
                     self.board[row+i][col]=1
-
-
-
-    def toString(self):
-        print ""
-        print "BoardConstraint"
-        print "Variables: ",self.variables
 
     def isValid(self, variable, value, domains):
         fixedVar = filter(lambda var: len(domains[var])==1, domains)
@@ -70,3 +59,8 @@ class Board(Constraint):
             if cursum>self.cols[i]:
                 return False
         return True
+
+    def toString(self):
+        print ""
+        print "BoardConstraint"
+        print "Variables: ",self.variables

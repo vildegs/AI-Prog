@@ -3,7 +3,7 @@ from constraint import Constraint
 counter = 0
 
 class RowCol(Constraint):
-    index = None
+
     def __init__(self,roworcol,index, variables):
         Constraint.__init__(self, variables)
         self.roworcol = roworcol
@@ -44,7 +44,7 @@ class RowCol(Constraint):
                     break
             if valid == False:
                 return False
-        #if it is the only segment in this row/col
+        #if it is the only segment in this row/col or it satisfies both of the ones above
         return True
 
     def printDomains(self,domains):

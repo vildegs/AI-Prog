@@ -2,6 +2,7 @@ from cellConstraint import Cell
 from rowcolConstraint import RowCol
 from boardConstraint import Board
 from GAC import gac
+import vis
 numcols = 0
 numrows = 0
 
@@ -102,14 +103,16 @@ def main():
     print "NONOGRAMS"
     print ""
     index = menu()
-    filename = "nono-"+files[index]+".txt"
+    filename = "InputFiles/nono-"+files[index]+".txt"
     print "Chosen file: ", files[index]
     rows,cols = readFile(filename)
+
     variables = initVariables(rows, cols)
     rowVar = filter(lambda var: var[0]==0, variables)
     colVar = filter (lambda var: var[0]==1, variables)
     domains= initDomains(variables, rows, cols)
     constraints = initConstraints(variables)
+    #vis.run(numrows, numcols)
     path, expanded = gac(variables, domains,constraints)
     if len(path)>0:
         print "Solution found"
@@ -117,30 +120,25 @@ def main():
     else:
         print "Could not find solution"
 
-def domainSize(domains):
-    sum = 0
-    for variable, domain in domains.iteritems():
-        sum+= len(domain)
-    return sum
-
-
 def showSolution(sol, rows, cols):
-    board = [['.' for i in range(len(cols))] for j in range(len(rows))]
+    board = [[' ' for i in range(len(cols))] for j in range(len(rows))]
     for variable in sol.domains:
         if variable[0]==0:
             x  = sol.domains[variable][0]
             y = len(rows)-variable[1]-1
             for i in range(variable[3]):
-                board[y][x+i]='x'
+                board[y][x+i]='X'
         else:
             y  = len(rows)-sol.domains[variable][0]-1
             x = variable[1]
             for i in range(variable[3]):
-                board[y-i][x]='x'
+                board[y-i][x]='X'
+    print ""
     for i in range(len(board)):
         for j in range(len(board[i])):
             print board[i][j],
         print " "
+    print ""
 
 def printConstraints(constraints):
     for constraint in constraints:

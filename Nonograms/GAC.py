@@ -23,10 +23,8 @@ def gac(var, dom, cons):
     domains = dom
     queue = GACinitialize(variables, constraints)
     GACDomainFilteringLoop()
-
     from node import Node
     root = Node (domains)
-
     return astar(root, goal)
 
 
@@ -65,7 +63,6 @@ def GACDomainFilteringLoop():
 #remove all x in the domain of the variable where there are no (x,y) that satisfy the constraint
 def revise(var, constraint):
     global domains
-    #print domains
     domain = domains[var]
     newDomain =[]
     isReduced = False
@@ -81,19 +78,11 @@ def GACrerun(node):
     global domains, queue
     queue = []
     domains = node.domains
-    #print "Before: ",domains
-    #print "Variables",variables
-    #printConstraints()
-    #print "Variable", node.variable
     for otherVar in variables:
         for constraint in constraints:
             if constraint.hasVar(otherVar) and otherVar != node.variable and constraint.hasVar(node.variable):
-                #print "Adding to queue"
-                #print otherVar
-                #constraint.toString()
                 queue.append((otherVar, constraint))
     GACDomainFilteringLoop()
-    #print "After", domains
     if emptyDomains(domains):
         domains = False
     return domains
