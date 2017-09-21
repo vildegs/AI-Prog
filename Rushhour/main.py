@@ -1,4 +1,3 @@
-
 from astarRushHour import RushHour
 from breadthFirst import bfs
 from depthFirst import dfs
@@ -60,11 +59,17 @@ def main():
 
     print("\nRUSH HOUR GAME \n")
     print("Choose board: ")
+    print "0 : Choose your own board"
     for i in range(len(fileNames)):
-        print(str(i) + ": "+fileNames[i])
-    index = input()
+        print(str(i+1) + ": "+fileNames[i])
+    index = input()-1
     print("\n")
-    board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile("inputFiles/"+fileNames[index]+".txt"))
+    if index ==-1:
+        print "Filename: "
+        filename = raw_input()
+    else:
+        filename = "inputFiles/"+fileNames[index]+".txt"
+    board, positions, constantPos, orientations, lengths, numCars = createState(readFromFile(filename))
     static.setVariables(constantPos, orientations, lengths, numCars)
     root = Node(board, positions, [])
     search = RushHour()
@@ -73,13 +78,11 @@ def main():
     print("Choose algorithm: ")
     for i in range(len(algorithms)):
         print(str(i) + ": "+ str(algorithmsToPrint[i]))
-    index2 = input()
+    index = input()
     print ""
-    print "Algorithm: ",algorithmsToPrint[index2]
-    print "Board: ", fileNames[index]
     print ""
 
-    path, expanded = algorithms[index2](root, 4)
+    path, expanded = algorithms[index](root, 6-static.lengths[0])
     print("Path length: ",len(path)-1)
     print("Expanded nodes: ", expanded)
     vis = Visualisation(path,len(path)-1, expanded)

@@ -12,8 +12,7 @@ class Nonogram(Astar):
         #sum these
         h =0
         for variable, domain in node.domains.iteritems():
-            #h= h + len(domain)-1
-            x =0
+            h= h + len(domain)-1
         return h
 
     #how can we have an input goal
@@ -28,5 +27,3 @@ class Nonogram(Astar):
 
     def astar(self, root, goal):
         return super(Nonogram,self).astar(root, goal)
-
-    

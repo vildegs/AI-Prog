@@ -2,7 +2,9 @@ from cellConstraint import Cell
 from rowcolConstraint import RowCol
 from boardConstraint import Board
 from GAC import gac
-import vis
+import static
+from copy import deepcopy
+
 numcols = 0
 numrows = 0
 
@@ -80,7 +82,6 @@ def initConstraints(variables):
         for j in range(numcols):
             affectedVar = []
             affectedVar = filter(lambda var: (var[0]==0 and var[1]==i) or (var[0]==1 and var[1]==j), variables)
-            #print i, j, affectedVar
             constraints.append(Cell(j,i,affectedVar))
 
     constraints.append(Board(variables,numrows, numcols))
@@ -94,6 +95,7 @@ def printDomains(domains):
 files = ["cat", "chick", "clover","elephant", "fox","rabbit", "reindeer", "sailboat", "snail2", "telephone"]
 def menu():
     print "Alternative nonograms"
+    print "0 :  Choose your own file"
     for i in range(1,len(files)+1):
         print i, ": ", files[i-1]
     print "Choose file:"
@@ -103,8 +105,11 @@ def main():
     print "NONOGRAMS"
     print ""
     index = menu()
-    filename = "InputFiles/nono-"+files[index]+".txt"
-    print "Chosen file: ", files[index]
+    if index == -1:
+        print "Write filename"
+        filename = raw_input()
+    else:
+        filename = "InputFiles/nono-"+files[index]+".txt"
     rows,cols = readFile(filename)
 
     variables = initVariables(rows, cols)
@@ -112,13 +117,86 @@ def main():
     colVar = filter (lambda var: var[0]==1, variables)
     domains= initDomains(variables, rows, cols)
     constraints = initConstraints(variables)
-    #vis.run(numrows, numcols)
+    static.setVariables(numrows, numcols)
     path, expanded = gac(variables, domains,constraints)
     if len(path)>0:
         print "Solution found"
+        print "Path length", len(path)-1
+        speed = int(1000*60*0.1/len(path))
+        visPath(path, speed)
         showSolution(path[len(path)-1], rows, cols)
     else:
         print "Could not find solution"
+
+from Tkinter import *
+master = None
+canvas = None
+board = None
+
+def visPath(path, speed):
+    global master, canvas
+    master = Tk()
+    canvas = Canvas(master, width=600, height=600)
+    canvas.pack()
+
+    for node in path:
+        vis(node,speed)
+    text = Text(master)
+    text.insert(INSERT, "Finished")
+    text.pack()
+    master.mainloop()
+
+def vis(current, speed):
+    createboard(current)
+    master.update_idletasks()
+    master.update()
+    master.after(speed)
+
+def createboard(node):
+    variables = deepcopy(node.setVariables)
+    values = deepcopy(node.setValues)
+
+    board = [[0 for i in range(static.cols)] for j in range(static.rows)]
+
+    for variable in node.domains:
+        if len(node.domains[variable])==1 and variable not in variables:
+            variables.append(variable)
+            values.append(node.domains[variable][0])
+
+    for variable, value in zip(variables, values):
+        if variable[0]==0:
+            x  = value
+            y = static.rows-variable[1]-1
+            for i in range(variable[3]):
+                board[y][x+i]=1
+        else:
+            y  = static.rows-value-1
+            x = variable[1]
+            for i in range(variable[3]):
+                board[y-i][x]=1
+    drawboard(board)
+
+def drawboard(board):
+    rows = len(board)
+    cols = len(board[0])
+    for row in range(rows):
+        for col in range(cols):
+            drawCell(board, row, col)
+
+
+def drawCell(board, row, col):
+    margin = 5
+    cellSize = 30
+    left = margin + col * cellSize
+    right = left + cellSize
+    top = margin + row * cellSize
+    bottom = top + cellSize
+    canvas.create_rectangle(left, top, right, bottom, fill="white")
+    if (board[row][col] > 0):
+        # draw part of the snake body
+        canvas.create_rectangle(left, top, right, bottom, fill="blue")
+
+
 
 def showSolution(sol, rows, cols):
     board = [[' ' for i in range(len(cols))] for j in range(len(rows))]
@@ -140,8 +218,5 @@ def showSolution(sol, rows, cols):
         print " "
     print ""
 
-def printConstraints(constraints):
-    for constraint in constraints:
-        constraint.toString()
 
 main()
