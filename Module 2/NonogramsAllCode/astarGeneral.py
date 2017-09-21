@@ -28,8 +28,7 @@ class Astar(object):
         while opened:
             #take the node with the minimum f-value
             current = opened[min(opened, key = lambda n: opened[n].f)]
-            print current.h
-            print current.g
+
             #TODO
             self.vis(current)
 

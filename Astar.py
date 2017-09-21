@@ -1,14 +1,4 @@
-from Tkinter import *
-import static
-from copy import deepcopy
-
-master = Tk()
-canvas = Canvas(master, width=600, height=600)
-canvas.pack()
-text  = Text(master)
-
 class Astar(object):
-
     def __init__(self):
         pass
 
@@ -21,6 +11,7 @@ class Astar(object):
         start.g = 0
         start.h = self.heuristic(start, goal)
         start.f = start.g + start.h
+
         #putting the start node in the opened queue
         opened[start.getHash()]=start
 
@@ -28,22 +19,9 @@ class Astar(object):
         while opened:
             #take the node with the minimum f-value
             current = opened[min(opened, key = lambda n: opened[n].f)]
-            print current.h
-            print current.g
-            #TODO
-            self.vis(current)
-
             #check if the current node is a  solution, if it is it return the path
             if self.isSolution(current,goal):
-                print "Opened: ", len(opened)
-                print "Closed (expanded) : ", len(closed)
-                print "Generated: ", len(opened)+len(closed)
-                #TODO
-                text.insert(INSERT,"FINISHED")
-                text.pack()
-                #master.mainloop()
                 return self.constructPath(current), len(closed)
-
             #removes the current node from opened
             del opened[current.getHash()]
             #add the node to closed
@@ -76,9 +54,7 @@ class Astar(object):
                     #if the successor has already been expanded, it has to update its childrens g-values aswell
                     if successor.getHash() in closed:
                         self.propagatepathimprovements(successor)
-
         return [], len(closed)
-
 
     def attachandeval(self, current, child):
         #attaches the child to its parent
@@ -108,54 +84,3 @@ class Astar(object):
         path.append(current)
         #reverse the list so the first node is the root (quicker than .reverse())
         return path[::-1]
-
-    def vis(self, current):
-        self.createboard(current)
-        master.update_idletasks()
-        master.update()
-        master.after(1)
-
-    def createboard(self, node):
-
-        variables = deepcopy(node.setVariables)
-        values = deepcopy(node.setValues)
-
-        board = [[0 for i in range(static.cols)] for j in range(static.rows)]
-
-        for variable in node.domains:
-            if len(node.domains[variable])==1 and variable not in variables:
-                variables.append(variable)
-                values.append(node.domains[variable][0])
-
-        for variable, value in zip(variables, values):
-            if variable[0]==0:
-                x  = value
-                y = static.rows-variable[1]-1
-                for i in range(variable[3]):
-                    board[y][x+i]=1
-            else:
-                y  = static.rows-value-1
-                x = variable[1]
-                for i in range(variable[3]):
-                    board[y-i][x]=1
-        self.drawboard(board)
-
-    def drawboard(self, board):
-        rows = len(board)
-        cols = len(board[0])
-        for row in range(rows):
-            for col in range(cols):
-                self.drawCell(board, row, col)
-
-
-    def drawCell(self, board, row, col):
-        margin = 5
-        cellSize = 30
-        left = margin + col * cellSize
-        right = left + cellSize
-        top = margin + row * cellSize
-        bottom = top + cellSize
-        canvas.create_rectangle(left, top, right, bottom, fill="white")
-        if (board[row][col] > 0):
-            # draw part of the snake body
-            canvas.create_oval(left, top, right, bottom, fill="blue")

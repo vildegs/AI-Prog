@@ -28,10 +28,9 @@ class Astar(object):
         while opened:
             #take the node with the minimum f-value
             current = opened[min(opened, key = lambda n: opened[n].f)]
-            print current.h
-            print current.g
             #TODO
             self.vis(current)
+            #print sum(len(current.domains[var]) for var in current.domains)
 
             #check if the current node is a  solution, if it is it return the path
             if self.isSolution(current,goal):
@@ -41,6 +40,7 @@ class Astar(object):
                 #TODO
                 text.insert(INSERT,"FINISHED")
                 text.pack()
+                master.after(100)
                 #master.mainloop()
                 return self.constructPath(current), len(closed)
 
@@ -121,12 +121,12 @@ class Astar(object):
         values = deepcopy(node.setValues)
 
         board = [[0 for i in range(static.cols)] for j in range(static.rows)]
-
+        '''
         for variable in node.domains:
             if len(node.domains[variable])==1 and variable not in variables:
                 variables.append(variable)
                 values.append(node.domains[variable][0])
-
+        '''
         for variable, value in zip(variables, values):
             if variable[0]==0:
                 x  = value

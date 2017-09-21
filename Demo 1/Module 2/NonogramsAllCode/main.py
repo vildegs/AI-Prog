@@ -124,7 +124,7 @@ def main():
         print "Path length", len(path)-1
         speed = int(1000*60*0.1/len(path))
         visPath(path, speed)
-        #showSolution(path[len(path)-1], rows, cols)
+        showSolution(path[len(path)-1], rows, cols)
     else:
         print "Could not find solution"
 

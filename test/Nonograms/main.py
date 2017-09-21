@@ -157,12 +157,12 @@ def createboard(node):
     values = deepcopy(node.setValues)
 
     board = [[0 for i in range(static.cols)] for j in range(static.rows)]
-
+    '''
     for variable in node.domains:
         if len(node.domains[variable])==1 and variable not in variables:
             variables.append(variable)
             values.append(node.domains[variable][0])
-
+            '''
     for variable, value in zip(variables, values):
         if variable[0]==0:
             x  = value
